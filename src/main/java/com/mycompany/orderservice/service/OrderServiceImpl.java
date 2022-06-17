@@ -7,6 +7,7 @@ import com.mycompany.orderservice.dto.OrderDTO;
 import com.mycompany.orderservice.entity.OrderEntity;
 import com.mycompany.orderservice.exception.BusinessException;
 import com.mycompany.orderservice.repository.OrderRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -33,6 +34,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO placeOrder(OrderDTO orderDTO) {
+        log.info("Entering method placeOrder in OrderServiceImpl");
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity httpEntity = new HttpEntity(null, headers);
@@ -74,12 +77,15 @@ public class OrderServiceImpl implements OrderService {
                 BeanUtils.copyProperties(orderEntity, orderDTO);
             }
         }
+        log.info("Exiting method placeOrder in OrderServiceImpl");
+
         return orderDTO;
     }
 
     @Override
     public List<OrderDTO> getAllOrders(Long userId) {
 
+        log.info("Entering method getAllOrders in OrderServiceImpl");
         List<OrderEntity> orderEntities = orderRepository.findAllByUserId(userId);
 
         ResponseEntity<BookDTO> re = null;
@@ -109,6 +115,8 @@ public class OrderServiceImpl implements OrderService {
             orderDTO.setUserId(userId);
             orderDtoList.add(orderDTO);
         }
+
+        log.info("Exiting method getAllOrders in OrderServiceImpl");
 
         return orderDtoList;
     }
